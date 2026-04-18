@@ -10,7 +10,7 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0vh", "50vh"]);
 
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ phone: "", school: "", service: "" });
+  const [form, setForm] = useState({ phone: "", school: "", service: "", comment: "" });
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -24,7 +24,7 @@ export default function Hero() {
         body: JSON.stringify(form),
       });
       setSent(true);
-      setForm({ phone: "", school: "", service: "" });
+      setForm({ phone: "", school: "", service: "", comment: "" });
       setTimeout(() => { setOpen(false); setSent(false); }, 2000);
     } finally {
       setLoading(false);
@@ -116,6 +116,16 @@ export default function Hero() {
                       value={form.service}
                       onChange={handleChange}
                       placeholder="Что нужно заказать?"
+                      className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Комментарий</label>
+                    <input
+                      name="comment"
+                      value={form.comment}
+                      onChange={handleChange}
+                      placeholder="Дополнительные пожелания (необязательно)"
                       className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
                     />
                   </div>

@@ -21,6 +21,7 @@ def handler(event: dict, context) -> dict:
     phone = body.get('phone', '').strip()
     school = body.get('school', '').strip()
     service = body.get('service', '').strip()
+    comment = body.get('comment', '').strip()
 
     if not phone or not school or not service:
         return {
@@ -32,14 +33,14 @@ def handler(event: dict, context) -> dict:
     token = os.environ['TELEGRAM_BOT_TOKEN'].strip()
     chat_id = os.environ['TELEGRAM_CHAT_ID'].strip()
 
-    print(f"[DEBUG] token length: {len(token)}, chat_id: {chat_id}")
-
     text = (
         f"\U0001f4cb *Новая заявка — Школьный Призрак*\n\n"
         f"\U0001f4de Телефон: {phone}\n"
         f"\U0001f3eb Школа: {school}\n"
         f"\U0001f4dd Услуга: {service}"
     )
+    if comment:
+        text += f"\n\U0001f4ac Комментарий: {comment}"
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     data = json.dumps({
