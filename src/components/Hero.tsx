@@ -27,7 +27,7 @@ export default function Hero() {
 
       <div className="relative z-10 text-center text-white">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
-          УЧЁБА БЕЗ ЗАБОТ
+          ШКОЛЬНЫЙ ПРИЗРАК
         </h1>
         <p className="text-lg md:text-xl max-w-2xl mx-auto px-6 opacity-90">
           Закажи любую школьную услугу в пару кликов — быстро, удобно и надёжно
