@@ -11,6 +11,25 @@ export default function Hero() {
 
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ phone: "", school: "", service: "" });
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!form.phone || !form.school || !form.service) return;
+    setLoading(true);
+    try {
+      await fetch("https://functions.poehali.dev/6ec8ac58-1679-47f6-84f0-683d252b9128", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      setSent(true);
+      setForm({ phone: "", school: "", service: "" });
+      setTimeout(() => { setOpen(false); setSent(false); }, 2000);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -65,38 +84,43 @@ export default function Hero() {
               onClick={(e) => e.stopPropagation()}
             >
               <h2 className="text-xl font-bold uppercase tracking-wide mb-6 text-neutral-900">Оформить заказ</h2>
-              <div className="flex flex-col gap-4">
-                <div>
-                  <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Номер телефона</label>
-                  <input
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="+7 999 000 00 00"
-                    className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
-                  />
+              {sent && (
+                <div className="text-center py-6 text-green-600 font-semibold text-lg">Заявка отправлена!</div>
+              )}
+              {!sent && (
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Номер телефона</label>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="+7 999 000 00 00"
+                      className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Школа</label>
+                    <input
+                      name="school"
+                      value={form.school}
+                      onChange={handleChange}
+                      placeholder="Название или номер школы"
+                      className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Услуга</label>
+                    <input
+                      name="service"
+                      value={form.service}
+                      onChange={handleChange}
+                      placeholder="Что нужно заказать?"
+                      className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Школа</label>
-                  <input
-                    name="school"
-                    value={form.school}
-                    onChange={handleChange}
-                    placeholder="Название или номер школы"
-                    className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-wide text-neutral-500 mb-1 block">Услуга</label>
-                  <input
-                    name="service"
-                    value={form.service}
-                    onChange={handleChange}
-                    placeholder="Что нужно заказать?"
-                    className="w-full border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-black transition-colors"
-                  />
-                </div>
-              </div>
+              )}
               <div className="flex gap-3 mt-8">
                 <button
                   onClick={() => setOpen(false)}
@@ -105,10 +129,11 @@ export default function Hero() {
                   Отмена
                 </button>
                 <button
-                  onClick={() => setOpen(false)}
-                  className="flex-1 bg-black text-white py-3 text-sm uppercase tracking-wide hover:bg-neutral-800 transition-colors cursor-pointer"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="flex-1 bg-black text-white py-3 text-sm uppercase tracking-wide hover:bg-neutral-800 transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  Отправить
+                  {loading ? 'Отправка...' : 'Отправить'}
                 </button>
               </div>
             </motion.div>

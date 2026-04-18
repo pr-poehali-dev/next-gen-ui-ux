@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Missing fields",
+      "method": "POST",
+      "path": "/",
+      "body": {"phone": "", "school": "", "service": ""},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "fill_all_fields"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
