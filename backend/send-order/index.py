@@ -29,14 +29,16 @@ def handler(event: dict, context) -> dict:
             'body': {'error': 'fill_all_fields'}
         }
 
-    token = os.environ['TELEGRAM_BOT_TOKEN']
-    chat_id = os.environ['TELEGRAM_CHAT_ID']
+    token = os.environ['TELEGRAM_BOT_TOKEN'].strip()
+    chat_id = os.environ['TELEGRAM_CHAT_ID'].strip()
+
+    print(f"[DEBUG] token length: {len(token)}, chat_id: {chat_id}")
 
     text = (
-        f"📋 *Новая заявка — Школьный Призрак*\n\n"
-        f"📞 Телефон: {phone}\n"
-        f"🏫 Школа: {school}\n"
-        f"📝 Услуга: {service}"
+        f"\U0001f4cb *Новая заявка — Школьный Призрак*\n\n"
+        f"\U0001f4de Телефон: {phone}\n"
+        f"\U0001f3eb Школа: {school}\n"
+        f"\U0001f4dd Услуга: {service}"
     )
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -47,7 +49,15 @@ def handler(event: dict, context) -> dict:
     }).encode('utf-8')
 
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
-    urllib.request.urlopen(req)
+    try:
+        urllib.request.urlopen(req)
+    except Exception as e:
+        print(f"[ERROR] Telegram API error: {e}")
+        return {
+            'statusCode': 500,
+            'headers': {'Access-Control-Allow-Origin': '*'},
+            'body': {'error': str(e)}
+        }
 
     return {
         'statusCode': 200,
